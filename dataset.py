@@ -102,7 +102,7 @@ def samples_from_distribution(distribution, n=16, size=4):
 
 
 def plot_dataset(
-    data, file_format="pdf", size=5, cmap=None, desc=None, shape=None, sort=True
+    data, file_format="pdf", size=5, cmap=None, desc=None, shape=None, sort=True, save=True
 ):
     if sort:
         data = sort_dataset(data)
@@ -142,10 +142,13 @@ def plot_dataset(
 
     filename = f"dataset_{datetime.now().strftime('%Y%m%d_%H%M%S')}{'_' + desc if desc is not None else ''}"
 
-    args = {"format": file_format, "bbox_inches": "tight"}
-    if file_format == "pgf":
-        args["backend"] = "pgf"
-    plt.savefig(f"{filename}.{file_format}", **args)
+    if save:
+        args = {"format": file_format, "bbox_inches": "tight"}
+        if file_format == "pgf":
+            args["backend"] = "pgf"
+        plt.savefig(f"{filename}.{file_format}", **args)
+    else:
+        plt.show()
     plt.close()
 
 

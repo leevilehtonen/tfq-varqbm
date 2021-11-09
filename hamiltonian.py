@@ -1,8 +1,6 @@
 from typing import Optional
 import cirq
 import tensorflow as tf
-import numpy as np
-import tqdm
 
 
 class Hamiltonian:

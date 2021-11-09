@@ -4,7 +4,7 @@ import tensorflow_probability as tfp
 import tensorflow_quantum as tfq
 import numpy as np
 from typing import Any, Dict, List, Optional, Tuple
-from tqdm import tqdm, trange
+from tqdm.autonotebook import tqdm, trange
 from collections import defaultdict
 from utils import (
     circuit_to_state,

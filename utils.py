@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional, Union
 import cirq
 from cirq import value
 from cirq.contrib.svg.svg import circuit_to_svg
+from cirq.contrib.svg import SVGCircuit
 import numpy as np
 import tensorflow as tf
 import tensorflow_quantum as tfq
@@ -12,7 +13,7 @@ from matplotlib import ticker
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-from tqdm import tqdm
+from tqdm.autonotebook import tqdm, trange
 
 sns.set_theme(
     context="paper", style="ticks", palette="colorblind", font="serif"
@@ -49,8 +50,10 @@ def get_ancillary_qubits(
     return cirq.GridQubit.rect(rows=rows, cols=cols, top=top)
 
 
-def save_circuit_to_svg(circuit: cirq.Circuit):
+def save_circuit_to_svg(circuit: cirq.Circuit, show: bool = False):
     circuit_svg = circuit_to_svg(circuit)
+    if show:
+        return SVGCircuit(circuit)
     with open(
         f"circuit_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.svg", "x"
     ) as file:
@@ -167,6 +170,7 @@ def plot_density_matrix_heatmap(
     annot: bool = False,
     titles: List[str] = None,
     file_format: str = "pdf",
+    show: bool = False,
     orient: str = "horizontal",
     vmin: float = None,
     vmax: float = None,
@@ -212,13 +216,16 @@ def plot_density_matrix_heatmap(
 
     fig.tight_layout()
 
-    filename = f"density_{desc + '_' if desc is not None else ''}{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    if show:
+        plt.show()
+    else:
+        filename = f"density_{desc + '_' if desc is not None else ''}{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
-    args = {"format": file_format, "bbox_inches": "tight"}
-    if file_format == "pgf":
-        args["backend"] = "pgf"
+        args = {"format": file_format, "bbox_inches": "tight"}
+        if file_format == "pgf":
+            args["backend"] = "pgf"
 
-    plt.savefig(f"{filename}.{file_format}", **args)
+        plt.savefig(f"{filename}.{file_format}", **args)
 
 
 def get_vmin(densities: List[tf.Tensor]) -> float:
